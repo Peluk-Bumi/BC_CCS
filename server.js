@@ -10,17 +10,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const { 
-    BLOCKCHAIN_RPC_URL, 
-    BLOCKCHAIN_CHAIN_ID, 
-    BLOCKCHAIN_CONTRACT_ADDRESS, 
+const {
+    BLOCKCHAIN_RPC_URL,
+    BLOCKCHAIN_CHAIN_ID,
+    BLOCKCHAIN_CONTRACT_ADDRESS,
     BLOCKCHAIN_EXPLORER_URL,
     BLOCKCHAIN_NETWORK_LABEL,
     BLOCKCHAIN_FALLBACK_RPC_URLS,
     BLOCKCHAIN_GAS_LIMIT,
     BLOCKCHAIN_MAX_GAS_PRICE,
-    PRIVATE_KEY, 
-    PORT = 4000 
+    PRIVATE_KEY,
+    PORT = 4000
 } = process.env;
 
 // Support legacy variables during migration
@@ -110,6 +110,9 @@ app.post('/store-document', async (req, res) => {
             documentType,
             documentId,
             docHash,
+            contractAddress: CONTRACT_ADDRESS,
+            walletAddress: wallet.address,
+            chainId: Number(BLOCKCHAIN_CHAIN_ID || 11155111),
             timestamp: new Date().toISOString()
         });
 
