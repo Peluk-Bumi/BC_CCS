@@ -38,7 +38,7 @@ Pembaruan: **19 Mei 2026**
 ## Layer 4 — Consensus Layer
 
 ### Implementasi saat ini
-- Finalitas transaksi mengandalkan konsensus jaringan (Sepolia `11155111` default di `server.js`, atau Polygon Amoy jika dikonfigurasi di `.env`).
+- Finalitas transaksi mengandalkan konsensus jaringan Polygon Amoy `80002` sebagai default di `server.js`.
 - Model `ConsensusValidation` ada di **BE_CCS** (database), belum dipanggil dari `BC_CCS`.
 
 ### Gap
@@ -83,6 +83,6 @@ Pembaruan: **19 Mei 2026**
 ## Checklist tindak lanjut (BC_CCS)
 
 - [ ] Implementasi atau hapus dependency IPFS (hindari drift)
-- [ ] Satukan dokumentasi jaringan aktif (Sepolia vs Amoy) di `.env.example` dan `DEPLOYMENT_ADDRESSES.md`
+- [ ] Satukan dokumentasi jaringan aktif (Amoy vs Mainnet) di `.env.example` dan `DEPLOYMENT_ADDRESSES.md`
 - [ ] Kontrak extended untuk validasi planting (opsional, fase 2)
 - [ ] Endpoint health yang menyertakan `chainId` dan nama jaringan

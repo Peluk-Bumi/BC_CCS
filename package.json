@@ -1,7 +1,7 @@
 {
   "name": "ccs-blockchain-service",
   "version": "1.0.0",
-  "description": "Blockchain service for CCS project - handles document storage on Sepolia",
+  "description": "Blockchain service for CCS project - handles document storage on Polygon Amoy",
   "type": "module",
   "main": "server.js",
   "scripts": {
@@ -11,7 +11,8 @@
   "keywords": [
     "blockchain",
     "ethereum",
-    "sepolia",
+    "polygon",
+    "polygon-amoy",
     "document-registry"
   ],
   "author": "CCS Team",

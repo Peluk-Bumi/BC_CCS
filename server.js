@@ -48,10 +48,10 @@ const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 // Log blockchain configuration
 console.log('🔗 Blockchain Configuration:', {
     rpcUrl: RPC_URL.substring(0, 50) + '...',
-    chainId: BLOCKCHAIN_CHAIN_ID || '11155111',
+    chainId: BLOCKCHAIN_CHAIN_ID || '80002',
     contractAddress: CONTRACT_ADDRESS,
-    explorerUrl: BLOCKCHAIN_EXPLORER_URL || 'https://sepolia.etherscan.io',
-    networkLabel: BLOCKCHAIN_NETWORK_LABEL || 'Sepolia Testnet'
+    explorerUrl: BLOCKCHAIN_EXPLORER_URL || 'https://amoy.polygonscan.com',
+    networkLabel: BLOCKCHAIN_NETWORK_LABEL || 'Polygon Amoy Testnet'
 });
 
 // ABI smart contract
@@ -112,7 +112,7 @@ app.post('/store-document', async (req, res) => {
             docHash,
             contractAddress: CONTRACT_ADDRESS,
             walletAddress: wallet.address,
-            chainId: Number(BLOCKCHAIN_CHAIN_ID || 11155111),
+            chainId: Number(BLOCKCHAIN_CHAIN_ID || 80002),
             timestamp: new Date().toISOString()
         });
 

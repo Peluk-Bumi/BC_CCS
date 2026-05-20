@@ -51,10 +51,10 @@ class BackendBlockchainConfig {
     return {
       // Core blockchain settings
       rpcUrl: process.env.BLOCKCHAIN_RPC_URL || process.env.RPC_URL,
-      chainId: parseInt(process.env.BLOCKCHAIN_CHAIN_ID || '11155111'),
+      chainId: parseInt(process.env.BLOCKCHAIN_CHAIN_ID || '80002'),
       contractAddress: process.env.BLOCKCHAIN_CONTRACT_ADDRESS || process.env.CONTRACT_ADDRESS,
-      explorerUrl: process.env.BLOCKCHAIN_EXPLORER_URL || 'https://sepolia.etherscan.io',
-      networkLabel: process.env.BLOCKCHAIN_NETWORK_LABEL || 'Sepolia Testnet',
+      explorerUrl: process.env.BLOCKCHAIN_EXPLORER_URL || 'https://amoy.polygonscan.com',
+      networkLabel: process.env.BLOCKCHAIN_NETWORK_LABEL || 'Polygon Amoy Testnet',
       
       // RPC configuration
       fallbackRpcUrls: this.getFallbackRpcUrls(),

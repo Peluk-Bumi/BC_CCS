@@ -48,7 +48,7 @@ BC_CCS/
 - **Ethers.js 6.15.0** - Ethereum interaction library
 - **Express.js 4.18.2** - Node.js web framework
 - **IPFS HTTP Client 58.0.0** - IPFS integration
-- **EVM testnet** — Sepolia (default di `server.js`, chainId 11155111) atau Polygon Amoy (konfigurasi `.env`)
+- **EVM testnet** — Polygon Amoy (default di `server.js`, chainId 80002)
 
 ## 🚀 Quick Start
 

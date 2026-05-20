@@ -1,6 +1,6 @@
 # BC_CCS — Blockchain Service
 
-Layanan Node.js untuk Peluk Bumi CCS: penyimpanan hash dokumen di smart contract `DocumentRegistry`, proxy transaksi ke jaringan EVM (Sepolia / Polygon Amoy), dan integrasi dengan backend Laravel (`BE_CCS`).
+Layanan Node.js untuk Peluk Bumi CCS: penyimpanan hash dokumen di smart contract `DocumentRegistry`, proxy transaksi ke jaringan EVM (Polygon Amoy), dan integrasi dengan backend Laravel (`BE_CCS`).
 
 ## Peran dalam monorepo
 
