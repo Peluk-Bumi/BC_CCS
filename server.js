@@ -72,21 +72,26 @@ app.get('/health', (req, res) => {
     });
 });
 
-// ============================
-// STORE DOCUMENT (REAL CONTRACT CALL)
-// ============================
-app.post('/store-document', async (req, res) => {
+async function handleStoreActivity(req, res) {
     try {
-        const { documentType, docHash, metadata, documentId } = req.body;
+        const {
+            activityType,
+            documentType,
+            docHash,
+            metadata,
+            documentId,
+        } = req.body;
 
-        if (!documentType || !docHash) {
+        const resolvedActivityType = activityType || documentType;
+
+        if (!resolvedActivityType || !docHash) {
             return res.status(400).json({
                 success: false,
-                error: "Missing: documentType, docHash",
+                error: "Missing: activityType, docHash",
             });
         }
 
-        console.log("📨 Broadcasting transaction...");
+        console.log("📨 Broadcasting activity transaction...");
         console.log("➡ DocHash:", docHash);
 
         const metadataPayload =
@@ -94,9 +99,12 @@ app.post('/store-document', async (req, res) => {
                 ? metadata
                 : JSON.stringify(metadata || {});
 
-        // DocumentRegistry.storeDocument only accepts 3 args
-        const tx = await contract.storeDocument(
-            documentType,
+        const storeMethod = typeof contract.storeActivity === 'function'
+            ? contract.storeActivity.bind(contract)
+            : contract.storeDocument.bind(contract);
+
+        const tx = await storeMethod(
+            resolvedActivityType,
             docHash,
             metadataPayload
         );
@@ -107,7 +115,8 @@ app.post('/store-document', async (req, res) => {
             success: true,
             message: "Transaction sent to blockchain",
             txHash: tx.hash,
-            documentType,
+            activityType: resolvedActivityType,
+            documentType: resolvedActivityType,
             documentId,
             docHash,
             contractAddress: CONTRACT_ADDRESS,
@@ -123,7 +132,15 @@ app.post('/store-document', async (req, res) => {
             error: err.message,
         });
     }
-});
+}
+
+// ============================
+// STORE ACTIVITY (REAL CONTRACT CALL)
+// ============================
+app.post('/store-activity', handleStoreActivity);
+
+// Backward compatible alias
+app.post('/store-document', handleStoreActivity);
 
 // ============================
 // GET TRANSACTION DETAILS
@@ -151,18 +168,18 @@ app.get('/transaction/:hash', async (req, res) => {
 });
 
 // ============================
-// GET DOCUMENT FROM BLOCKCHAIN
+// GET ACTIVITY FROM BLOCKCHAIN
 // ============================
 app.get('/document/:docId', async (req, res) => {
     try {
         const { docId } = req.params;
 
-        console.log(`📖 Fetching document #${docId} from blockchain...`);
+        console.log(`📖 Fetching activity #${docId} from blockchain...`);
 
-        // ✅ Call smart contract function to get document
+        // ✅ Call smart contract function to get activity record
         const [docType, docHash, metadata, uploader, timestamp] = await contract.getDocument(docId);
 
-        console.log(`✅ Document found:`, {
+        console.log(`✅ Activity found:`, {
             docId,
             docType,
             docHash,
@@ -183,7 +200,7 @@ app.get('/document/:docId', async (req, res) => {
         });
 
     } catch (err) {
-        console.error(`❌ Error fetching document:`, err.message);
+        console.error(`❌ Error fetching activity:`, err.message);
         return res.status(500).json({
             success: false,
             error: err.message,
@@ -192,7 +209,7 @@ app.get('/document/:docId', async (req, res) => {
 });
 
 // ============================
-// GET DOCUMENT BY HASH (FROM BLOCKCHAIN) - Already implemented
+// GET ACTIVITY BY HASH (FROM BLOCKCHAIN) - Already implemented
 // ============================
 app.get('/document-by-hash/:docHash', async (req, res) => {
     try {

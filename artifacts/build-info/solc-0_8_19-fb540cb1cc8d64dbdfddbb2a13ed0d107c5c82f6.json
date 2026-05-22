@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_19-fb540cb1cc8d64dbdfddbb2a13ed0d107c5c82f6",
+  "solcVersion": "0.8.19",
+  "solcLongVersion": "0.8.19+commit.7dd6d404",
+  "compilerType": "solc",
+  "userSourceNameMap": {
+    "contracts/DocumentRegistry.sol": "project/contracts/DocumentRegistry.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "paris",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/DocumentRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.19;\r\n\r\ncontract DocumentRegistry {\r\n    struct Activity {\r\n        string activityType;\r\n        string docHash;\r\n        string metadata;\r\n        address uploader;\r\n        uint256 timestamp;\r\n    }\r\n\r\n    mapping(uint256 => Activity) private activities;\r\n    uint256 private activityCount;\r\n\r\n    event ActivityStored(\r\n        uint256 indexed activityId,\r\n        string activityType,\r\n        string docHash,\r\n        address indexed uploader,\r\n        uint256 timestamp\r\n    );\r\n\r\n    event DocumentStored(\r\n        uint256 indexed docId,\r\n        string docType,\r\n        string docHash,\r\n        address indexed uploader,\r\n        uint256 timestamp\r\n    );\r\n\r\n    function storeActivity(\r\n        string memory _activityType,\r\n        string memory _docHash,\r\n        string memory _metadata\r\n    ) public returns (uint256) {\r\n        activityCount++;\r\n\r\n        activities[activityCount] = Activity({\r\n            activityType: _activityType,\r\n            docHash: _docHash,\r\n            metadata: _metadata,\r\n            uploader: msg.sender,\r\n            timestamp: block.timestamp\r\n        });\r\n\r\n        emit ActivityStored(\r\n            activityCount,\r\n            _activityType,\r\n            _docHash,\r\n            msg.sender,\r\n            block.timestamp\r\n        );\r\n\r\n        return activityCount;\r\n    }\r\n\r\n    function storeDocument(\r\n        string memory _docType,\r\n        string memory _docHash,\r\n        string memory _metadata\r\n    ) public returns (uint256) {\r\n        uint256 activityId = storeActivity(_docType, _docHash, _metadata);\r\n        Activity memory activity = activities[activityId];\r\n\r\n        emit DocumentStored(\r\n            activityId,\r\n            activity.activityType,\r\n            activity.docHash,\r\n            activity.uploader,\r\n            activity.timestamp\r\n        );\r\n\r\n        return activityId;\r\n    }\r\n\r\n    function getActivity(uint256 _activityId) public view returns (\r\n        string memory activityType,\r\n        string memory docHash,\r\n        string memory metadata,\r\n        address uploader,\r\n        uint256 timestamp\r\n    ) {\r\n        require(_activityId > 0 && _activityId <= activityCount, \"Invalid activity ID\");\r\n\r\n        Activity memory activity = activities[_activityId];\r\n        return (\r\n            activity.activityType,\r\n            activity.docHash,\r\n            activity.metadata,\r\n            activity.uploader,\r\n            activity.timestamp\r\n        );\r\n    }\r\n\r\n    function getDocument(uint256 _docId) public view returns (\r\n        string memory docType,\r\n        string memory docHash,\r\n        string memory metadata,\r\n        address uploader,\r\n        uint256 timestamp\r\n    ) {\r\n        return getActivity(_docId);\r\n    }\r\n\r\n    function getActivityCount() public view returns (uint256) {\r\n        return activityCount;\r\n    }\r\n\r\n    function getDocumentCount() public view returns (uint256) {\r\n        return activityCount;\r\n    }\r\n}\r\n"
+      }
+    }
+  }
+}

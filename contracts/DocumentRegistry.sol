@@ -2,16 +2,24 @@
 pragma solidity ^0.8.19;
 
 contract DocumentRegistry {
-    struct Document {
-        string docType;
+    struct Activity {
+        string activityType;
         string docHash;
         string metadata;
         address uploader;
         uint256 timestamp;
     }
 
-    mapping(uint256 => Document) public documents;
-    uint256 public documentCount;
+    mapping(uint256 => Activity) private activities;
+    uint256 private activityCount;
+
+    event ActivityStored(
+        uint256 indexed activityId,
+        string activityType,
+        string docHash,
+        address indexed uploader,
+        uint256 timestamp
+    );
 
     event DocumentStored(
         uint256 indexed docId,
@@ -21,30 +29,68 @@ contract DocumentRegistry {
         uint256 timestamp
     );
 
-    function storeDocument(
-        string memory _docType,
+    function storeActivity(
+        string memory _activityType,
         string memory _docHash,
         string memory _metadata
     ) public returns (uint256) {
-        documentCount++;
-        
-        documents[documentCount] = Document({
-            docType: _docType,
+        activityCount++;
+
+        activities[activityCount] = Activity({
+            activityType: _activityType,
             docHash: _docHash,
             metadata: _metadata,
             uploader: msg.sender,
             timestamp: block.timestamp
         });
 
-        emit DocumentStored(
-            documentCount,
-            _docType,
+        emit ActivityStored(
+            activityCount,
+            _activityType,
             _docHash,
             msg.sender,
             block.timestamp
         );
 
-        return documentCount;
+        return activityCount;
+    }
+
+    function storeDocument(
+        string memory _docType,
+        string memory _docHash,
+        string memory _metadata
+    ) public returns (uint256) {
+        uint256 activityId = storeActivity(_docType, _docHash, _metadata);
+        Activity memory activity = activities[activityId];
+
+        emit DocumentStored(
+            activityId,
+            activity.activityType,
+            activity.docHash,
+            activity.uploader,
+            activity.timestamp
+        );
+
+        return activityId;
+    }
+
+    function getActivity(uint256 _activityId) public view returns (
+        string memory activityType,
+        string memory docHash,
+        string memory metadata,
+        address uploader,
+        uint256 timestamp
+    ) {
+        require(_activityId > 0 && _activityId <= activityCount, "Invalid activity ID");
+
+        Activity memory activity = activities[_activityId];
+        return (
+            activity.activityType,
+            activity.docHash,
+            activity.metadata,
+            activity.uploader,
+            activity.timestamp
+        );
     }
 
     function getDocument(uint256 _docId) public view returns (
@@ -54,19 +100,14 @@ contract DocumentRegistry {
         address uploader,
         uint256 timestamp
     ) {
-        require(_docId > 0 && _docId <= documentCount, "Invalid document ID");
-        
-        Document memory doc = documents[_docId];
-        return (
-            doc.docType,
-            doc.docHash,
-            doc.metadata,
-            doc.uploader,
-            doc.timestamp
-        );
+        return getActivity(_docId);
+    }
+
+    function getActivityCount() public view returns (uint256) {
+        return activityCount;
     }
 
     function getDocumentCount() public view returns (uint256) {
-        return documentCount;
+        return activityCount;
     }
 }
