@@ -1,14 +1,14 @@
-# BC_CCS — Blockchain Service
+# BC_CCS — Blockchain Service (V2)
 
-Layanan Node.js untuk Peluk Bumi CCS: penyimpanan hash dokumen di smart contract `DocumentRegistry`, proxy transaksi ke jaringan EVM (Polygon Amoy), dan integrasi dengan backend Laravel (`BE_CCS`).
+Layanan Node.js untuk Peluk Bumi CCS: penyimpanan hash aktivitas di smart contract `DocumentRegistry` secara dinamis, proxy transaksi ke jaringan EVM (Polygon/Sepolia), dan integrasi dengan backend Laravel (`BE_CCS`).
 
 ## Peran dalam monorepo
 
 | Komponen | Port default | Peran |
 |----------|--------------|--------|
 | **FE_CCS** | 5173 | Dashboard React, verifikasi publik (QR) |
-| **BE_CCS** | 8000 | API Laravel, orkestrasi blockchain |
-| **BC_CCS** | 4000 | Eksekusi transaksi on-chain |
+| **BE_CCS** | 8000 | API Laravel, orkestrasi blockchain & intelijen |
+| **BC_CCS** | 4000 | Eksekusi transaksi on-chain (Activity-based) |
 
 ## Quick start
 
@@ -16,11 +16,18 @@ Layanan Node.js untuk Peluk Bumi CCS: penyimpanan hash dokumen di smart contract
 cd BC_CCS
 npm install
 cp .env.example .env
-# Isi PRIVATE_KEY, BLOCKCHAIN_RPC_URL, BLOCKCHAIN_CONTRACT_ADDRESS
+# Sesuaikan network di .env (Polygon Mainnet/Sepolia/Amoy)
 npm run dev
 ```
 
 Health check: `GET http://localhost:4000/health`
+
+## Fitur V2 (Activity-based)
+
+- **Dynamic Activity Logging**: Tidak hanya menyimpan dokumen, tapi mencatat setiap aktivitas (Perencanaan, Implementasi, Monitoring) sebagai entry unik.
+- **Smart Contract V2**: Mendukung method `storeActivity` dan `getActivity` untuk audit trail yang lebih detail.
+- **Multi-Network Support**: Konfigurasi siap pakai untuk Polygon Mainnet, Ethereum Sepolia, dan Polygon Amoy.
+- **Auto-Broadcaster**: Terintegrasi dengan queue Laravel untuk pemrosesan transaksi asinkron.
 
 ## Struktur utama
 
