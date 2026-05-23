@@ -1,4 +1,4 @@
-# 🔗 BC_CCS — Blockchain Service (V2)
+# 🔗 BC_CCS — Peluk Bumi EMS Blockchain (V2)
 
 Layanan Node.js untuk **Peluk Bumi Environmental Monitoring System (EMS)**. Bertanggung jawab untuk penyimpanan hash aktivitas ke smart contract `DocumentRegistry` di jaringan EVM (Polygon Amoy/Mainnet), menyediakan audit trail yang tidak dapat diubah (immutable) untuk setiap tahapan proses bisnis.
 

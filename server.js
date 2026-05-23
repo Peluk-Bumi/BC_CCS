@@ -104,13 +104,13 @@ async function handleStoreActivity(req, res) {
         let tx;
         const typeUpper = resolvedActivityType.toUpperCase();
 
-        if (typeUpper === 'PLANNING' && typeof contract.recordPlanning === 'function') {
+        if ((typeUpper === 'PLANNING' || typeUpper === 'PERENCANAAN') && typeof contract.recordPlanning === 'function') {
             tx = await contract.recordPlanning(docHash, metadataPayload);
-        } else if (typeUpper === 'IMPLEMENTATION' && typeof contract.recordImplementation === 'function') {
+        } else if ((typeUpper === 'IMPLEMENTATION' || typeUpper === 'IMPLEMENTASI') && typeof contract.recordImplementation === 'function') {
             tx = await contract.recordImplementation(docHash, metadataPayload);
         } else if (typeUpper === 'MONITORING' && typeof contract.recordMonitoring === 'function') {
             tx = await contract.recordMonitoring(docHash, metadataPayload);
-        } else if (typeUpper === 'VERIFICATION' && typeof contract.recordVerification === 'function') {
+        } else if ((typeUpper === 'VERIFICATION' || typeUpper === 'VERIFIKASI') && typeof contract.recordVerification === 'function') {
             tx = await contract.recordVerification(docHash, metadataPayload);
         } else {
             // Fallback to generic storeActivity
