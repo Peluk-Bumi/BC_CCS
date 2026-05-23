@@ -45,13 +45,27 @@ if (process.env.CONTRACT_ADDRESS && !BLOCKCHAIN_CONTRACT_ADDRESS) {
 const provider = new ethers.JsonRpcProvider(RPC_URL);
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
+// Log balance at startup
+try {
+    const balance = await provider.getBalance(wallet.address);
+    console.log(`💰 Wallet Balance: ${ethers.formatEther(balance)} ETH`);
+    
+    if (balance === 0n) {
+        console.warn('⚠️ WARNING: Wallet balance is 0! Transactions will fail.');
+        console.warn('If you are on local node, ensure you are using a funded Hardhat account.');
+    }
+} catch (err) {
+    console.error('❌ Failed to fetch wallet balance:', err.message);
+}
+
 // Log blockchain configuration
 console.log('🔗 Blockchain Configuration:', {
     rpcUrl: RPC_URL.substring(0, 50) + '...',
-    chainId: BLOCKCHAIN_CHAIN_ID || '80002',
+    chainId: BLOCKCHAIN_CHAIN_ID || '31337',
+    walletAddress: wallet.address,
     contractAddress: CONTRACT_ADDRESS,
-    explorerUrl: BLOCKCHAIN_EXPLORER_URL || 'https://amoy.polygonscan.com',
-    networkLabel: BLOCKCHAIN_NETWORK_LABEL || 'Polygon Amoy Testnet'
+    explorerUrl: BLOCKCHAIN_EXPLORER_URL || 'http://localhost:8545',
+    networkLabel: BLOCKCHAIN_NETWORK_LABEL || 'Local Network'
 });
 
 // ABI smart contract
@@ -137,7 +151,7 @@ async function handleStoreActivity(req, res) {
             docHash,
             contractAddress: CONTRACT_ADDRESS,
             walletAddress: wallet.address,
-            chainId: Number(BLOCKCHAIN_CHAIN_ID || 80002),
+            chainId: Number(BLOCKCHAIN_CHAIN_ID || 31337),
             timestamp: new Date().toISOString()
         });
 
