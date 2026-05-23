@@ -43,8 +43,11 @@ async function main() {
   const count = await contract.getDocumentCount();
   console.log("✅ Initial document count:", count.toString());
 
-  console.log("\n📝 Update blockchain.js with this address:");
-  console.log(`   const CONTRACT_ADDRESS = "${address}";\n`);
+  console.log("\n📝 Update .env with this address:");
+  console.log(`   BLOCKCHAIN_CONTRACT_ADDRESS="${address}";\n`);
+  
+  console.log("🛠️ To verify the contract, run:");
+  console.log(`   npx hardhat verify --network ${pkg.network.name} ${address}\n`);
 }
 
 main()

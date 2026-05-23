@@ -1,73 +1,97 @@
-# BC_CCS — Blockchain Service (V2)
+# 🔗 BC_CCS — Blockchain Service (V2)
 
-Layanan Node.js untuk Peluk Bumi CCS: penyimpanan hash aktivitas di smart contract `DocumentRegistry` secara dinamis, proxy transaksi ke jaringan EVM (Polygon/Sepolia), dan integrasi dengan backend Laravel (`BE_CCS`).
+Layanan Node.js untuk **Peluk Bumi Environmental Monitoring System (EMS)**. Bertanggung jawab untuk penyimpanan hash aktivitas ke smart contract `DocumentRegistry` di jaringan EVM (Polygon Amoy/Mainnet), menyediakan audit trail yang tidak dapat diubah (immutable) untuk setiap tahapan proses bisnis.
 
-## Peran dalam monorepo
+## 📌 Peran dalam Ekosistem
 
-| Komponen | Port default | Peran |
-|----------|--------------|--------|
-| **FE_CCS** | 5173 | Dashboard React, verifikasi publik (QR) |
-| **BE_CCS** | 8000 | API Laravel, orkestrasi blockchain & intelijen |
-| **BC_CCS** | 4000 | Eksekusi transaksi on-chain (Activity-based) |
+| Komponen | Port | Peran |
+|----------|------|-------|
+| **BE_CCS** | 8000 | Backend Laravel (Orkestrator & Logika Bisnis) |
+| **BC_CCS** | 4000 | Blockchain Service (Eksekusi Transaksi On-chain) |
+| **FE_CCS** | 5173 | Frontend Dashboard & Verifikasi Publik |
 
-## Quick start
+---
 
+## 🏗️ Arsitektur & Teknologi
+
+- **Smart Contract**: Solidity 0.8.19 (`DocumentRegistry.sol`)
+- **Framework**: Hardhat & Express.js
+- **Library**: Ethers.js v6
+- **Network**: Polygon Amoy (Default Testnet), Polygon Mainnet (Production)
+
+### Struktur Proyek Utama
+- `contracts/`: Smart contract Solidity.
+- `scripts/`: Script deployment dan verifikasi build.
+- `server.js`: API Server utama untuk interaksi blockchain.
+- `DocumentRegistry.abi.json`: ABI kontrak untuk komunikasi server-to-contract.
+
+---
+
+## 🔄 Alur Proses Bisnis & Jejak Hash
+
+Setiap tahapan dalam proses bisnis (Perencanaan, Implementasi, Monitoring) memiliki **jejak hash** tersendiri di blockchain.
+
+1. **Jejak Hash per Tahap**: Setiap aktivitas menghasilkan `docHash` (SHA-256 dari data/dokumen).
+2. **Method Utama**:
+   - `POST /store-activity`: Mengirim hash dan metadata ke blockchain.
+   - **Smart Methods** (Terdeteksi otomatis di Explorer):
+     - `recordPlanning`: Untuk tahap Perencanaan.
+     - `recordImplementation`: Untuk tahap Implementasi.
+     - `recordMonitoring`: Untuk tahap Monitoring.
+     - `recordVerification`: Untuk tahap Verifikasi.
+     - `storeActivity`: Fallback untuk tipe aktivitas lainnya.
+3. **Bukti Transaksi**: Setiap penyimpanan menghasilkan `txHash` unik sebagai bukti permanen bahwa data tersebut telah divalidasi pada waktu tertentu.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Instalasi
 ```bash
-cd BC_CCS
 npm install
 cp .env.example .env
-# Sesuaikan network di .env (Polygon Mainnet/Sepolia/Amoy)
-npm run dev
 ```
 
-Health check: `GET http://localhost:4000/health`
+### 2. Konfigurasi
+Edit `.env` dan pastikan variabel berikut terisi:
+- `BLOCKCHAIN_RPC_URL`: URL RPC provider (misal: Alchemy/Infura)
+- `PRIVATE_KEY`: Wallet private key (dengan saldo gas)
+- `BLOCKCHAIN_CONTRACT_ADDRESS`: Alamat kontrak yang sudah di-deploy
 
-## Fitur V2 (Activity-based)
+### 3. Menjalankan Service
+- **Development**: `npm run dev`
+- **Production**: `npm start` atau `./start-blockchain-production.sh`
 
-- **Dynamic Activity Logging**: Tidak hanya menyimpan dokumen, tapi mencatat setiap aktivitas (Perencanaan, Implementasi, Monitoring) sebagai entry unik.
-- **Smart Contract V2**: Mendukung method `storeActivity` dan `getActivity` untuk audit trail yang lebih detail.
-- **Multi-Network Support**: Konfigurasi siap pakai untuk Polygon Mainnet, Ethereum Sepolia, dan Polygon Amoy.
-- **Auto-Broadcaster**: Terintegrasi dengan queue Laravel untuk pemrosesan transaksi asinkron.
+---
 
-## Struktur utama
+## 📡 API Endpoints
 
-```
-BC_CCS/
-├── contracts/DocumentRegistry.sol
-├── server.js
-├── DocumentRegistry.abi.json
-├── scripts/              # Deploy & verifikasi (Hardhat)
-├── docs/                 # Dokumentasi detail
-├── testing/              # Skrip diagnostik PHP
-├── README.md
-└── CHANGELOG.md
-```
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/health` | `GET` | Cek status koneksi wallet & blockchain |
+| `/store-activity` | `POST` | Simpan hash aktivitas ke blockchain |
+| `/transaction/:hash` | `GET` | Ambil detail transaksi berdasarkan TX Hash |
+| `/document/:docId` | `GET` | Ambil data aktivitas berdasarkan ID internal contract |
 
-## Dokumentasi
+---
 
-| Dokumen | Isi |
-|---------|-----|
-| [docs/README.md](docs/README.md) | Overview layanan & API |
-| [docs/SETUP.md](docs/SETUP.md) | Instalasi & environment |
-| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Deploy kontrak & produksi |
-| [docs/DEPLOYMENT_ADDRESSES.md](docs/DEPLOYMENT_ADDRESSES.md) | Alamat kontrak per jaringan |
-| [docs/SEVEN_LAYER_ALIGNMENT.md](docs/SEVEN_LAYER_ALIGNMENT.md) | Kesesuaian 7 layer (blockchain) |
+## 🛠️ Troubleshooting: Status "Modified" di Git
 
-## Scripts
+Jika Anda melihat banyak file berstatus `modified` setelah melakukan `git pull`, hal ini biasanya disebabkan oleh **perbedaan Line Endings (LF vs CRLF)** antara sistem operasi (Windows vs macOS/Linux).
 
-| Perintah | Keterangan |
-|----------|------------|
-| `npm run dev` | Server dengan `--watch` |
-| `npm start` | Produksi |
-| `start-service.bat` | Windows — start service |
-| `start-blockchain-production.sh` | Linux — produksi |
+**Solusi:**
+1. Reset file yang termodifikasi:
+   ```bash
+   git checkout .
+   ```
+2. Atur git agar menangani line endings secara otomatis:
+   ```bash
+   git config core.autocrlf input  # Untuk macOS/Linux
+   # atau
+   git config core.autocrlf true   # Untuk Windows
+   ```
 
-Deploy kontrak (Hardhat): lihat [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+---
 
-## Riwayat perubahan
-
-Lihat [CHANGELOG.md](CHANGELOG.md).
-
-## Lisensi
-
-MIT
+## 📜 Lisensi
+MIT — Peluk Bumi Project

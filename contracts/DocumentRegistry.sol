@@ -29,11 +29,11 @@ contract DocumentRegistry {
         uint256 timestamp
     );
 
-    function storeActivity(
+    function _createActivity(
         string memory _activityType,
         string memory _docHash,
         string memory _metadata
-    ) public returns (uint256) {
+    ) private returns (uint256) {
         activityCount++;
 
         activities[activityCount] = Activity({
@@ -53,6 +53,54 @@ contract DocumentRegistry {
         );
 
         return activityCount;
+    }
+
+    function storeActivity(
+        string memory _activityType,
+        string memory _docHash,
+        string memory _metadata
+    ) public returns (uint256) {
+        return _createActivity(_activityType, _docHash, _metadata);
+    }
+
+    /**
+     * @dev Record Planning Stage
+     */
+    function recordPlanning(
+        string memory _docHash,
+        string memory _metadata
+    ) public returns (uint256) {
+        return _createActivity("Planning", _docHash, _metadata);
+    }
+
+    /**
+     * @dev Record Implementation Stage
+     */
+    function recordImplementation(
+        string memory _docHash,
+        string memory _metadata
+    ) public returns (uint256) {
+        return _createActivity("Implementation", _docHash, _metadata);
+    }
+
+    /**
+     * @dev Record Monitoring Stage
+     */
+    function recordMonitoring(
+        string memory _docHash,
+        string memory _metadata
+    ) public returns (uint256) {
+        return _createActivity("Monitoring", _docHash, _metadata);
+    }
+
+    /**
+     * @dev Record Verification Stage
+     */
+    function recordVerification(
+        string memory _docHash,
+        string memory _metadata
+    ) public returns (uint256) {
+        return _createActivity("Verification", _docHash, _metadata);
     }
 
     function storeDocument(

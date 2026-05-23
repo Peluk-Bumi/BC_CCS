@@ -1,4 +1,5 @@
 import "@nomicfoundation/hardhat-ethers";
+import "@nomicfoundation/hardhat-verify";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -19,19 +20,18 @@ const config = {
   solidity: "0.8.19",
   networks: {
     polygonAmoy: {
-      type: "http",
       url: AMOY_RPC_URL,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
       chainId: 80002,
-      gasPrice: "auto",
     },
     polygon: {
-      type: "http",
       url: POLYGON_MAINNET_RPC_URL,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
       chainId: 137,
-      gasPrice: "auto",
     },
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY || process.env.POLYGONSCAN_API_KEY || "",
   },
   paths: {
     sources: "./contracts",

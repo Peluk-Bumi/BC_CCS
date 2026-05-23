@@ -92,6 +92,7 @@ async function handleStoreActivity(req, res) {
         }
 
         console.log("📨 Broadcasting activity transaction...");
+        console.log("➡ Activity Type:", resolvedActivityType);
         console.log("➡ DocHash:", docHash);
 
         const metadataPayload =
@@ -99,15 +100,30 @@ async function handleStoreActivity(req, res) {
                 ? metadata
                 : JSON.stringify(metadata || {});
 
-        const storeMethod = typeof contract.storeActivity === 'function'
-            ? contract.storeActivity.bind(contract)
-            : contract.storeDocument.bind(contract);
+        // Map activityType to specific contract methods for better explorer visibility
+        let tx;
+        const typeUpper = resolvedActivityType.toUpperCase();
 
-        const tx = await storeMethod(
-            resolvedActivityType,
-            docHash,
-            metadataPayload
-        );
+        if (typeUpper === 'PLANNING' && typeof contract.recordPlanning === 'function') {
+            tx = await contract.recordPlanning(docHash, metadataPayload);
+        } else if (typeUpper === 'IMPLEMENTATION' && typeof contract.recordImplementation === 'function') {
+            tx = await contract.recordImplementation(docHash, metadataPayload);
+        } else if (typeUpper === 'MONITORING' && typeof contract.recordMonitoring === 'function') {
+            tx = await contract.recordMonitoring(docHash, metadataPayload);
+        } else if (typeUpper === 'VERIFICATION' && typeof contract.recordVerification === 'function') {
+            tx = await contract.recordVerification(docHash, metadataPayload);
+        } else {
+            // Fallback to generic storeActivity
+            const storeMethod = typeof contract.storeActivity === 'function'
+                ? contract.storeActivity.bind(contract)
+                : contract.storeDocument.bind(contract);
+
+            tx = await storeMethod(
+                resolvedActivityType,
+                docHash,
+                metadataPayload
+            );
+        }
 
         console.log("🔥 TX HASH:", tx.hash);
 
