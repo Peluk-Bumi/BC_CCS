@@ -9,16 +9,9 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function getExplorerAddressUrl(chainId, address) {
-  if (chainId === 80002n) {
-    return `https://amoy.polygonscan.com/address/${address}`;
-  }
-
-  if (chainId === 137n) {
-    return `https://polygonscan.com/address/${address}`;
-  }
-
-  return `https://polygonscan.com/address/${address}`;
+function getExplorerAddressUrl(address) {
+  const explorerUrl = process.env.BLOCKCHAIN_EXPLORER_URL || 'https://polygonscan.com';
+  return `${explorerUrl.replace(/\/$/, '')}/address/${address}`;
 }
 
 async function main() {
@@ -73,7 +66,7 @@ async function main() {
   console.log("\n✅ DocumentRegistry deployed successfully!");
   console.log("📍 Contract address:", address);
   console.log("\n🔗 View on explorer:");
-  console.log(`   ${getExplorerAddressUrl(network.chainId, address)}\n`);
+  console.log(`   ${getExplorerAddressUrl(address)}\n`);
 
   // Test contract
   console.log("🧪 Testing contract...");

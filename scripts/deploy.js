@@ -1,16 +1,9 @@
 import pkg from "hardhat";
 const { ethers } = pkg;
 
-function getExplorerAddressUrl(networkName, address) {
-  if (networkName === 'polygonAmoy') {
-    return `https://amoy.polygonscan.com/address/${address}`;
-  }
-
-  if (networkName === 'polygon') {
-    return `https://polygonscan.com/address/${address}`;
-  }
-
-  return `https://polygonscan.com/address/${address}`;
+function getExplorerAddressUrl(address) {
+  const explorerUrl = process.env.BLOCKCHAIN_EXPLORER_URL || 'https://polygonscan.com';
+  return `${explorerUrl.replace(/\/$/, '')}/address/${address}`;
 }
 
 async function main() {
@@ -36,7 +29,7 @@ async function main() {
   console.log("\n✅ DocumentRegistry deployed successfully!");
   console.log("📍 Contract address:", address);
   console.log("\n🔗 View on explorer:");
-  console.log(`   ${getExplorerAddressUrl(pkg.network.name, address)}\n`);
+  console.log(`   ${getExplorerAddressUrl(address)}\n`);
 
   // Test contract
   console.log("🧪 Testing contract...");

@@ -10,7 +10,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 function getExplorerAddressUrl(address) {
-  return `https://polygonscan.com/address/${address}`;
+  const explorerUrl = process.env.BLOCKCHAIN_EXPLORER_URL || 'https://polygonscan.com';
+  return `${explorerUrl.replace(/\/$/, '')}/address/${address}`;
 }
 
 async function main() {

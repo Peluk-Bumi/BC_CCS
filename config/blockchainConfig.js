@@ -51,10 +51,10 @@ class BackendBlockchainConfig {
     return {
       // Core blockchain settings
       rpcUrl: process.env.BLOCKCHAIN_RPC_URL || process.env.RPC_URL,
-      chainId: parseInt(process.env.BLOCKCHAIN_CHAIN_ID || '80002'),
+      chainId: parseInt(process.env.BLOCKCHAIN_CHAIN_ID || '31337'),
       contractAddress: process.env.BLOCKCHAIN_CONTRACT_ADDRESS || process.env.CONTRACT_ADDRESS,
-      explorerUrl: process.env.BLOCKCHAIN_EXPLORER_URL || 'https://amoy.polygonscan.com',
-      networkLabel: process.env.BLOCKCHAIN_NETWORK_LABEL || 'Polygon Amoy Testnet',
+      explorerUrl: process.env.BLOCKCHAIN_EXPLORER_URL || 'http://localhost:8545',
+      networkLabel: process.env.BLOCKCHAIN_NETWORK_LABEL || 'Local Network',
       
       // RPC configuration
       fallbackRpcUrls: this.getFallbackRpcUrls(),
