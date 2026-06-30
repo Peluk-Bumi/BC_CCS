@@ -1,6 +1,6 @@
 {
   "name": "ccs-blockchain-service",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Blockchain service for CCS project - handles document storage on EVM networks",
   "type": "module",
   "main": "server.js",

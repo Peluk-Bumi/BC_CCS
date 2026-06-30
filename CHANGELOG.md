@@ -6,12 +6,26 @@ Format mengacu pada [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-### Ditambahkan
-- `README.md` dan `CHANGELOG.md` di root `BC_CCS`
-- `docs/SEVEN_LAYER_ALIGNMENT.md` — pemetaan layer Contract / Consensus / Network
+---
 
-### Dokumentasi
-- Penyelarasan referensi jaringan (Sepolia vs Polygon Amoy) di dokumentasi
+## [2.0.0] - 2026-07-01
+
+### Ditambahkan
+- **Smart Contract v2 (Activity-based)**:
+  - Upgrade `DocumentRegistry.sol` dengan stage methods khusus (`recordPlanning`, `recordImplementation`, `recordMonitoring`, `recordVerification`) untuk kejelasan audit trail.
+  - Penambahan event `ActivityStored` untuk mempermudah indexing riwayat aktivitas.
+- **REST API Endpoint Pemetaan Bahasa Indonesia**:
+  - `server.js` diperbarui untuk mendukung `/store-activity` dengan kompatibilitas kata kunci bahasa Indonesia (`PERENCANAAN`, `IMPLEMENTASI`, `VERIFIKASI`) dan mapping otomatis ke method smart contract terkait.
+
+### Diubah & Direfaktor
+- **Dukungan Multi-Network**:
+  - Sinkronisasi konfigurasi Hardhat (`hardhat.config.js`) untuk mempermudah verifikasi kontrak (Etherscan/Polygonscan) di Polygon Mainnet, Sepolia Testnet, dan Localhost.
+
+### Dokumentasi & Pengarsipan (Pembersihan)
+- Penyelarasan referensi jaringan (Sepolia vs Polygon Amoy) di dokumentasi.
+- Menambahkan pemetaan arsitektur blockchain (`docs/SEVEN_LAYER_ALIGNMENT.md`).
+- Memindahkan launcher scripts usang (`start-service.bat`, `start-broadcaster.bat`, `start-blockchain-production.sh`), `DEPLOY_ADDRESS.txt`, dan file pengujian PHP ke `/archive/BC_CCS/` demi kebersihan kode.
+- Mengonfigurasi `.gitignore` untuk mengabaikan output kompilasi lokal Hardhat (`/artifacts/` dan `/cache/`).
 
 ---
 
